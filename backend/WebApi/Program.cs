@@ -29,6 +29,12 @@ if (builder.Environment.IsDevelopment())
     builder.Configuration.AddJsonFile("appsettings.Flow1Sandbox.Local.json", optional: true);
 builder.Configuration.AddEnvironmentVariables();
 
+var port = builder.Configuration["PORT"];
+if (!string.IsNullOrWhiteSpace(port))
+{
+    builder.Configuration["ASPNETCORE_HTTP_PORTS"] = port;
+}
+
 // Fallback mapping for standard SMTP_* environment variables into RegistrationEmail, Flow1, and Flow6
 var smtpHost = builder.Configuration["SMTP_HOST"];
 var smtpPort = builder.Configuration["SMTP_PORT"];

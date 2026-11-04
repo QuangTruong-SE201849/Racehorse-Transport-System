@@ -39,10 +39,11 @@ export default function SandboxPaymentPage() {
 
         if (!paymentId) throw new Error('Không tìm thấy phiên thanh toán. Mở lại yêu cầu để kiểm tra trạng thái từ máy chủ.')
 
-        // Chuyển tiếp query callback từ trình duyệt tới endpoint IPN để máy chủ xác thực chữ ký số và cập nhật DB khi test ở localhost
+        // Chuyển tiếp query callback từ trình duyệt tới endpoint IPN để máy chủ xác thực chữ ký số và cập nhật DB
         if (location.search.includes('vnp_SecureHash')) {
           try {
-            await fetch(`/api/payments/vnpay/ipn${location.search}`)
+            const apiBase = (import.meta.env.VITE_API_URL || '/api').replace(/\/+$/, '')
+            await fetch(`${apiBase}/payments/vnpay/ipn${location.search}`)
           } catch {
             // Đã được xử lý hoặc ghi nhận
           }
@@ -93,7 +94,8 @@ export default function SandboxPaymentPage() {
     setBusy(true)
     setError('')
     try {
-      const result = await fetch('/api/payments/vnpay', {
+      const apiBase = (import.meta.env.VITE_API_URL || '/api').replace(/\/+$/, '')
+      const result = await fetch(`${apiBase}/payments/vnpay`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount: Number(amount) }),
       }).then(readResponse)
