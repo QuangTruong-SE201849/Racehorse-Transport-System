@@ -24,5 +24,5 @@ ENV Flow1__Contracts__BrowserExecutablePath=/usr/bin/chromium \
     Flow1__Contracts__DisableBrowserSandbox=true
 WORKDIR /app
 COPY --from=publish /app/publish .
-COPY WebApi/Resources/Contracts/99-flow1-vietnamese.conf /etc/fonts/conf.d/99-flow1-vietnamese.conf
+RUN mkdir -p /etc/fonts/conf.d && printf '<?xml version="1.0"?>\n<!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">\n<fontconfig>\n <match target="pattern"><test name="family" compare="eq"><string>Times New Roman</string></test><edit name="family" mode="prepend" binding="strong"><string>Noto Serif</string></edit></match>\n <match target="pattern"><test name="family" compare="eq"><string>Arial</string></test><edit name="family" mode="prepend" binding="strong"><string>Noto Sans</string></edit></match>\n <match target="pattern"><test name="family" compare="eq"><string>Calibri</string></test><edit name="family" mode="prepend" binding="strong"><string>Noto Sans</string></edit></match>\n</fontconfig>\n' > /etc/fonts/conf.d/99-flow1-vietnamese.conf
 ENTRYPOINT ["dotnet", "WebApi.dll"]
