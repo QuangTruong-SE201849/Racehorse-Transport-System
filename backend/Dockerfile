@@ -2,14 +2,14 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copy csproj files to restore dependencies
-COPY ["WebApi/WebApi.csproj", "WebApi/"]
-COPY ["Application/Application.csproj", "Application/"]
-COPY ["Domain/Domain.csproj", "Domain/"]
-COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
+COPY ["backend/WebApi/WebApi.csproj", "WebApi/"]
+COPY ["backend/Application/Application.csproj", "Application/"]
+COPY ["backend/Domain/Domain.csproj", "Domain/"]
+COPY ["backend/Infrastructure/Infrastructure.csproj", "Infrastructure/"]
 RUN dotnet restore "WebApi/WebApi.csproj"
 
 # Copy the rest of the source code
-COPY . .
+COPY backend/ .
 WORKDIR "/src/WebApi"
 FROM build AS publish
 # publish already compiles the project, so a separate `dotnet build` step only doubled the build time
