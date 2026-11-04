@@ -36,6 +36,16 @@ if (!string.IsNullOrWhiteSpace(port))
 }
 
 // Fallback mapping for standard SMTP_* environment variables into RegistrationEmail, Flow1, and Flow6
+var regEmailMode = builder.Configuration["REGISTRATION_EMAIL_MODE"];
+if (!string.IsNullOrWhiteSpace(regEmailMode))
+{
+    builder.Configuration["RegistrationEmail:Mode"] = regEmailMode;
+}
+else if (!builder.Environment.IsDevelopment())
+{
+    builder.Configuration["RegistrationEmail:Mode"] = "Smtp";
+}
+
 var smtpHost = builder.Configuration["SMTP_HOST"];
 var smtpPort = builder.Configuration["SMTP_PORT"];
 var smtpUser = builder.Configuration["SMTP_USERNAME"];
@@ -44,38 +54,38 @@ var smtpFrom = builder.Configuration["SMTP_FROM"];
 
 if (!string.IsNullOrWhiteSpace(smtpHost))
 {
-    builder.Configuration["RegistrationEmail:Smtp:Host"] ??= smtpHost;
-    builder.Configuration["Flow6:Email:Smtp:Host"] ??= smtpHost;
-    builder.Configuration["Flow1:Contracts:Email:Smtp:Host"] ??= smtpHost;
-    builder.Configuration["Smtp:Host"] ??= smtpHost;
+    builder.Configuration["RegistrationEmail:Smtp:Host"] = smtpHost;
+    builder.Configuration["Flow6:Email:Smtp:Host"] = smtpHost;
+    builder.Configuration["Flow1:Contracts:Email:Smtp:Host"] = smtpHost;
+    builder.Configuration["Smtp:Host"] = smtpHost;
 }
 if (!string.IsNullOrWhiteSpace(smtpPort))
 {
-    builder.Configuration["RegistrationEmail:Smtp:Port"] ??= smtpPort;
-    builder.Configuration["Flow6:Email:Smtp:Port"] ??= smtpPort;
-    builder.Configuration["Flow1:Contracts:Email:Smtp:Port"] ??= smtpPort;
-    builder.Configuration["Smtp:Port"] ??= smtpPort;
+    builder.Configuration["RegistrationEmail:Smtp:Port"] = smtpPort;
+    builder.Configuration["Flow6:Email:Smtp:Port"] = smtpPort;
+    builder.Configuration["Flow1:Contracts:Email:Smtp:Port"] = smtpPort;
+    builder.Configuration["Smtp:Port"] = smtpPort;
 }
 if (!string.IsNullOrWhiteSpace(smtpUser))
 {
-    builder.Configuration["RegistrationEmail:Smtp:Username"] ??= smtpUser;
-    builder.Configuration["Flow6:Email:Smtp:Username"] ??= smtpUser;
-    builder.Configuration["Flow1:Contracts:Email:Smtp:Username"] ??= smtpUser;
-    builder.Configuration["Smtp:Username"] ??= smtpUser;
+    builder.Configuration["RegistrationEmail:Smtp:Username"] = smtpUser;
+    builder.Configuration["Flow6:Email:Smtp:Username"] = smtpUser;
+    builder.Configuration["Flow1:Contracts:Email:Smtp:Username"] = smtpUser;
+    builder.Configuration["Smtp:Username"] = smtpUser;
 }
 if (!string.IsNullOrWhiteSpace(smtpPass))
 {
-    builder.Configuration["RegistrationEmail:Smtp:Password"] ??= smtpPass;
-    builder.Configuration["Flow6:Email:Smtp:Password"] ??= smtpPass;
-    builder.Configuration["Flow1:Contracts:Email:Smtp:Password"] ??= smtpPass;
-    builder.Configuration["Smtp:Password"] ??= smtpPass;
+    builder.Configuration["RegistrationEmail:Smtp:Password"] = smtpPass;
+    builder.Configuration["Flow6:Email:Smtp:Password"] = smtpPass;
+    builder.Configuration["Flow1:Contracts:Email:Smtp:Password"] = smtpPass;
+    builder.Configuration["Smtp:Password"] = smtpPass;
 }
 if (!string.IsNullOrWhiteSpace(smtpFrom))
 {
-    builder.Configuration["RegistrationEmail:Smtp:From"] ??= smtpFrom;
-    builder.Configuration["Flow6:Email:Smtp:From"] ??= smtpFrom;
-    builder.Configuration["Flow1:Contracts:Email:Smtp:From"] ??= smtpFrom;
-    builder.Configuration["Smtp:FromEmail"] ??= smtpFrom;
+    builder.Configuration["RegistrationEmail:Smtp:From"] = smtpFrom;
+    builder.Configuration["Flow6:Email:Smtp:From"] = smtpFrom;
+    builder.Configuration["Flow1:Contracts:Email:Smtp:From"] = smtpFrom;
+    builder.Configuration["Smtp:FromEmail"] = smtpFrom;
 }
 
 // Fallback mapping for standard VNPAY_* environment variables
