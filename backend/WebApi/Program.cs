@@ -360,20 +360,15 @@ var app = builder.Build();
 // Bắt lỗi toàn cục: Đảm bảo Backend luôn trả về JSON khi có lỗi thay vì HTML 500
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
-if (app.Environment.IsDevelopment())
+// Bật Swagger UI cho cả Development và Production để kiểm thử API
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "RaceHorse Transport API v1");
-        c.OrderByFlow();
-        c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
-        c.EnableFilter();
-        c.OrderByFlow();
-        c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
-        c.EnableFilter();
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "RaceHorse Transport API v1");
+    c.OrderByFlow();
+    c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+    c.EnableFilter();
+});
 
 // Bật CORS cho Frontend trước Authentication và Authorization
 app.UseCors("AllowFrontend");

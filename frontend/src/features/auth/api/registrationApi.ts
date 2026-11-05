@@ -1,4 +1,5 @@
 import axios from "axios";
+import { resolveApiBaseUrl } from "../../../shared/api/apiClient";
 
 interface ApiResponse<T> {
   success: boolean;
@@ -14,7 +15,7 @@ export interface RegistrationOtpData {
 }
 
 const registrationApi = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "/api",
+  baseURL: resolveApiBaseUrl(import.meta.env.VITE_API_URL),
   headers: { "Content-Type": "application/json" },
   timeout: 30000,
 });

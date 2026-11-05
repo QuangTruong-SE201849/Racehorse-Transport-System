@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { contractClient } from '../../../shared/api/contractClient'
+import { resolveApiBaseUrl } from '../../../shared/api/apiClient'
 import { flow6Api } from '../../aftercare/api/flow6Api'
 import './SandboxPaymentPage.css'
 
@@ -42,7 +43,7 @@ export default function SandboxPaymentPage() {
         // Chuyển tiếp query callback từ trình duyệt tới endpoint IPN để máy chủ xác thực chữ ký số và cập nhật DB
         if (location.search.includes('vnp_SecureHash')) {
           try {
-            const apiBase = (import.meta.env.VITE_API_URL || '/api').replace(/\/+$/, '')
+            const apiBase = resolveApiBaseUrl(import.meta.env.VITE_API_URL)
             await fetch(`${apiBase}/payments/vnpay/ipn${location.search}`)
           } catch {
             // Đã được xử lý hoặc ghi nhận
@@ -51,19 +52,10 @@ export default function SandboxPaymentPage() {
 
         let dto: { id: string; amount: number; status: string; responseCode?: string }
         if (vnpTxnRef.startsWith('F6PAYMENT')) {
-          try {
-            const f6 = await flow6Api.getCustomerPayment(paymentId)
-            dto = { id: f6.id, amount: f6.amountVnd, status: f6.status }
-          } catch {
-            dto = await contractClient<{ id: string; amount: number; status: string; responseCode?: string }>('get', `/customer/payments/${paymentId}`)
-          }
+          const f6 = await flow6Api.getCustomerPayment(paymentId)
+          dto = { id: f6.id, amount: f6.amountVnd, status: f6.status }
         } else {
-          try {
-            dto = await contractClient<{ id: string; amount: number; status: string; responseCode?: string }>('get', `/customer/payments/${paymentId}`)
-          } catch {
-            const f6 = await flow6Api.getCustomerPayment(paymentId)
-            dto = { id: f6.id, amount: f6.amountVnd, status: f6.status }
-          }
+          dto = await contractClient<{ id: string; amount: number; status: string; responseCode?: string }>('get', `/customer/payments/${paymentId}`)
         }
 
         const vnpResponseCode = params.get('vnp_ResponseCode')
@@ -94,7 +86,7 @@ export default function SandboxPaymentPage() {
     setBusy(true)
     setError('')
     try {
-      const apiBase = (import.meta.env.VITE_API_URL || '/api').replace(/\/+$/, '')
+      const apiBase = resolveApiBaseUrl(import.meta.env.VITE_API_URL)
       const result = await fetch(`${apiBase}/payments/vnpay`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount: Number(amount) }),
